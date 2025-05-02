@@ -45,7 +45,7 @@ class HomeScreen extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => AgregarProductoPage()),
                 );
               },
-              child: const Text('Agregar producto'),
+              child: const Text('Agregar un producto'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
