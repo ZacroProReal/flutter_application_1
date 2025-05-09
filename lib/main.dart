@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Florezza 🌼',
+      title: 'Florezza 🌼.',
       theme: ThemeData(
         primaryColor: Colors.pink[100],
         useMaterial3: true,
