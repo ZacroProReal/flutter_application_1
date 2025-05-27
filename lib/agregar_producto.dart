@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
 class AgregarProductoPage extends StatefulWidget {
+  const AgregarProductoPage({super.key});
+
   @override
   State<AgregarProductoPage> createState() => _AgregarProductoPageState();
 }
@@ -86,7 +88,7 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
         decoration: InputDecoration(
           labelText: label,
           prefixText: prefix,
-          suffixIcon: icon != null ? Icon(icon) : Icon(Icons.edit),
+          suffixIcon: icon != null ? Icon(icon) : const Icon(Icons.edit),
           border: const OutlineInputBorder(),
         ),
       ),

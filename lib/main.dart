@@ -50,6 +50,12 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    // _cargarSesion();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _cargarSesion();
   }
 
@@ -189,7 +195,7 @@ class _HomePageState extends State<HomePage> {
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('No se pudo agregar el producto al carrito')),
+          const SnackBar(content: Text('No se pudo agregar el producto al carrito')),
         );
       }
     } catch (e) {
@@ -234,13 +240,30 @@ class _HomePageState extends State<HomePage> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.pink[100],
-              ),
-              child: const Text(
-                'Menú Florezza',
-                style: TextStyle(fontSize: 24, color: Colors.black87),
+            Container(
+              color: Colors.pink[100],
+              padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+              child: Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(24), // Bordes redondeados
+                    child: Image.asset(
+                      'assets/florezza_logo.jpg',
+                      width: 130, // Más grande
+                      height: 130,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  const Text(
+                    'Menú',
+                    style: TextStyle(
+                      fontSize: 30, // Más grande
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(221, 255, 248, 248),
+                    ),
+                  ),
+                ],
               ),
             ),
             ListTile(

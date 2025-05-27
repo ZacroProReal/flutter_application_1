@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart'; // Importa shared_preferences
+import 'detalle_producto.dart'; // Asegúrate de importar la página de detalle
 
 class ListaProductosPage extends StatefulWidget {
   final bool usuarioLogueado;
@@ -14,8 +14,8 @@ class ListaProductosPage extends StatefulWidget {
     required this.onAgregarAlCarrito,
     required this.mostrarAlertaInicioSesion,
     this.busqueda = '',
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   _ListaProductosPageState createState() => _ListaProductosPageState();
@@ -58,8 +58,8 @@ class _ListaProductosPageState extends State<ListaProductosPage> {
         final data = jsonDecode(response.body);
         if (data is List) {
           setState(() {
-            _productos = data;
-            _productosFiltrados = data;
+            _productos = data.where((p) => p['disponibilidad'] == true).toList();
+            _productosFiltrados = _productos;
           });
         } else {
           throw Exception('Formato de datos inesperado');
@@ -91,7 +91,8 @@ class _ListaProductosPageState extends State<ListaProductosPage> {
                 (producto['nombre'] ?? '')
                     .toString()
                     .toLowerCase()
-                    .contains(query))
+                    .contains(query) &&
+                producto['disponibilidad'] == true)
             .toList();
       });
     }
@@ -113,19 +114,28 @@ class _ListaProductosPageState extends State<ListaProductosPage> {
         children: [
           Expanded(
             child: ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(12)),
-              child: imagen != null
-                  ? Image.memory(
-                      base64Decode(imagen),
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const Icon(Icons.image_not_supported),
-                    )
-                  : Container(
-                      color: Colors.grey[200],
-                      child: const Icon(Icons.image_not_supported, size: 50),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => DetalleProductoPage(nombreProducto: nombre),
                     ),
+                  );
+                },
+                child: imagen != null
+                    ? Image.memory(
+                        base64Decode(imagen),
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(Icons.image_not_supported),
+                      )
+                    : Container(
+                        color: Colors.grey[200],
+                        child: const Icon(Icons.image_not_supported, size: 50),
+                      ),
+              ),
             ),
           ),
           Padding(

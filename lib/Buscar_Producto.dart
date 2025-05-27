@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class BuscarProductoPage extends StatefulWidget {
+  const BuscarProductoPage({super.key});
+
   @override
   _BuscarProductoPageState createState() => _BuscarProductoPageState();
 }
@@ -23,14 +25,14 @@ class _BuscarProductoPageState extends State<BuscarProductoPage> {
       if (response.statusCode == 200) {
         final List<dynamic> resultados = jsonDecode(response.body);
         setState(() {
-          productos = resultados;
+          productos = resultados.where((p) => p['disponibilidad'] == true).toList();
         });
       } else {
         setState(() {
           productos = [];
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('No se encontraron productos')),
+          const SnackBar(content: Text('No se encontraron productos')),
         );
       }
     } catch (e) {
