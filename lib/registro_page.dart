@@ -19,6 +19,7 @@ class _RegistroPageState extends State<RegistroPage> {
   final TextEditingController _telefonoController = TextEditingController();
   final TextEditingController _correoController = TextEditingController();
   final TextEditingController _contrasenaController = TextEditingController();
+  final TextEditingController _direccionController = TextEditingController();
   DateTime? _fechaNacimiento;
 
   Future<void> _registrarUsuario() async {
@@ -40,6 +41,7 @@ class _RegistroPageState extends State<RegistroPage> {
       'correo': _correoController.text,
       'contrasena': _contrasenaController.text,
       'fechaNacimiento': _fechaNacimiento!.toIso8601String().split('T')[0],
+      'direccion': _direccionController.text, // Nuevo campo
     };
 
     debugPrint('Payload enviado: $payload');
@@ -139,6 +141,11 @@ class _RegistroPageState extends State<RegistroPage> {
                 obscureText: true,
                 validator: (value) =>
                     value!.length < 6 ? 'Mínimo 6 caracteres' : null,
+              ),
+              TextFormField(
+                controller: _direccionController,
+                decoration: const InputDecoration(labelText: 'Dirección'),
+                validator: (value) => value!.isEmpty ? 'Campo requerido' : null,
               ),
               const SizedBox(height: 16),
               Row(
