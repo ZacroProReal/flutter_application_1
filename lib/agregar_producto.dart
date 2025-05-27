@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
 class AgregarProductoPage extends StatefulWidget {
+  const AgregarProductoPage({super.key});
+
   @override
   State<AgregarProductoPage> createState() => _AgregarProductoPageState();
 }
@@ -14,7 +16,8 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
   final TextEditingController descripcionController = TextEditingController();
   final TextEditingController valorController = TextEditingController();
   final TextEditingController colorFloresController = TextEditingController();
-  final TextEditingController cantidadDisponibleController = TextEditingController();
+  final TextEditingController cantidadDisponibleController =
+      TextEditingController();
   bool disponibilidad = true;
   Uint8List? imagenBytes;
 
@@ -30,12 +33,14 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
   }
 
   Future<void> agregarProducto() async {
-    final url = Uri.parse('http://127.0.0.1:8862/productos/');
+    final url = Uri.parse(
+        'https://tienda-virtual-de-flores-para-movil-1.onrender.com/productos/');
     final Map<String, dynamic> producto = {
       'nombre': nombreController.text,
       'descripcion': descripcionController.text,
       'precio': double.tryParse(valorController.text) ?? 0.0,
-      'cantidadDisponible': int.tryParse(cantidadDisponibleController.text) ?? 0,
+      'cantidadDisponible':
+          int.tryParse(cantidadDisponibleController.text) ?? 0,
       'colorFlores': colorFloresController.text,
       'disponibilidad': disponibilidad,
       'imagen': imagenBytes != null ? base64Encode(imagenBytes!) : null,
@@ -49,10 +54,7 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Producto agregado correctamente')),
-        );
-        limpiarCampos();
+        Navigator.pop(context, true); // ← aquí se regresa correctamente
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error: ${response.statusCode}')),
@@ -77,7 +79,8 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
     setState(() {});
   }
 
-  Widget buildTextField(String label, TextEditingController controller, {String? prefix, IconData? icon}) {
+  Widget buildTextField(String label, TextEditingController controller,
+      {String? prefix, IconData? icon}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: TextField(
@@ -85,7 +88,7 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
         decoration: InputDecoration(
           labelText: label,
           prefixText: prefix,
-          suffixIcon: icon != null ? Icon(icon) : Icon(Icons.edit),
+          suffixIcon: icon != null ? Icon(icon) : const Icon(Icons.edit),
           border: const OutlineInputBorder(),
         ),
       ),
@@ -108,13 +111,12 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
             buildTextField('Valor', valorController, prefix: '\$'),
             buildTextField('Color de flores', colorFloresController),
             buildTextField('Cantidad disponible', cantidadDisponibleController),
-
             const SizedBox(height: 16),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Disponibilidad', style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text('Disponibilidad',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
                 Switch(
                   value: disponibilidad,
                   onChanged: (value) {
@@ -129,24 +131,20 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
                 ),
               ],
             ),
-
             const SizedBox(height: 16),
-
             ElevatedButton.icon(
               onPressed: seleccionarImagen,
               icon: const Icon(Icons.image),
               label: const Text('Seleccionar imagen'),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.pink[100]),
+              style:
+                  ElevatedButton.styleFrom(backgroundColor: Colors.pink[100]),
             ),
-
             if (imagenBytes != null)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Image.memory(imagenBytes!, height: 150),
               ),
-
             const SizedBox(height: 20),
-
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.pink[200],
