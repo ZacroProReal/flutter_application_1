@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'carrito_service.dart';
 import 'generar_factura_service.dart';
 import 'FacturaPage.dart';
@@ -16,6 +15,7 @@ class _CarritoPageState extends State<CarritoPage> {
   List<dynamic> _productosEnCarrito = [];
   bool _cargando = false;
   String? _error;
+  String? _eliminandoId; // <-- NUEVO
 
   @override
   void initState() {
@@ -48,6 +48,7 @@ class _CarritoPageState extends State<CarritoPage> {
   Future<void> _eliminarProducto(dynamic id) async {
     setState(() {
       _cargando = true;
+      _eliminandoId = id.toString(); // <-- NUEVO
       _error = null;
     });
 
@@ -61,6 +62,7 @@ class _CarritoPageState extends State<CarritoPage> {
     } finally {
       setState(() {
         _cargando = false;
+        _eliminandoId = null; // <-- NUEVO
       });
     }
   }

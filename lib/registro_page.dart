@@ -22,9 +22,9 @@ class _RegistroPageState extends State<RegistroPage> {
   DateTime? _fechaNacimiento;
 
   Future<void> _registrarUsuario() async {
-    print('Iniciando registro de usuario...');
+    debugPrint('Iniciando registro de usuario...');
     if (!_formKey.currentState!.validate() || _fechaNacimiento == null) {
-      print('Validación fallida: campos incompletos');
+      debugPrint('Validación fallida: campos incompletos');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Por favor, completa todos los campos')),
       );
@@ -42,7 +42,7 @@ class _RegistroPageState extends State<RegistroPage> {
       'fechaNacimiento': _fechaNacimiento!.toIso8601String().split('T')[0],
     };
 
-    print('Payload enviado: $payload');
+    debugPrint('Payload enviado: $payload');
 
     try {
       final response = await http.post(
@@ -51,35 +51,36 @@ class _RegistroPageState extends State<RegistroPage> {
         body: jsonEncode(payload),
       );
 
-      print('Código de respuesta: ${response.statusCode}');
-      print('Respuesta: ${response.body}');
+      debugPrint('Código de respuesta: ${response.statusCode}');
+      debugPrint('Respuesta: ${response.body}');
 
       if (response.statusCode == 200) {
-        print('Registro exitoso');
+        debugPrint('Registro exitoso');
         final responseData = jsonDecode(response.body);
-        final token =
-            responseData['token']; // Asumiendo que tu backend devuelve un token
+        final token = responseData['token'];
 
         if (token != null) {
           final prefs = await SharedPreferences.getInstance();
           await prefs.setString('token', token);
-          await prefs.setBool(
-              'sesionIniciada', true); // Guarda el estado de sesión
+          await prefs.setBool('sesionIniciada', true);
         }
 
         widget.onRegisterSuccess();
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Usuario registrado con éxito')),
         );
         Navigator.pushReplacementNamed(context, '/');
       } else {
-        print('Error al registrar usuario');
+        debugPrint('Error al registrar usuario');
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error al registrar: ${response.body}')),
         );
       }
     } catch (e) {
-      print('Excepción durante el registro: $e');
+      debugPrint('Excepción durante el registro: $e');
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Excepción: $e')),
       );

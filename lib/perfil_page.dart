@@ -69,7 +69,7 @@ class _PerfilPageState extends State<PerfilPage> {
       body: _cargando
           ? const Center(child: CircularProgressIndicator())
           : _error != null
-              ? Center(child: Text(_error!, style: TextStyle(fontSize: 22)))
+              ? Center(child: Text(_error!, style: const TextStyle(fontSize: 22)))
               : _perfil == null
                   ? const Center(child: Text('No se encontró información de perfil', style: TextStyle(fontSize: 22)))
                   : Center(
